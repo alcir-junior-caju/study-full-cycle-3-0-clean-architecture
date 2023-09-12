@@ -31,4 +31,79 @@ describe('Unit test create customer use case', () => {
       ...input,
     });
   });
+
+  it('should throw error when name is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      name: '',
+    })).rejects.toThrowError('Name is required');
+  });
+
+  it('should throw error when street is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      address: {
+        ...input.address,
+        street: '',
+      }
+    })).rejects.toThrowError('Street is required');
+  });
+
+  it('should throw error when number is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      address: {
+        ...input.address,
+        number: 0,
+      }
+    })).rejects.toThrowError('Number is required');
+  });
+
+  it('should throw error when city is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      address: {
+        ...input.address,
+        city: '',
+      }
+    })).rejects.toThrowError('City is required');
+  });
+
+  it('should throw error when state is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      address: {
+        ...input.address,
+        state: '',
+      }
+    })).rejects.toThrowError('State is required');
+  });
+
+  it('should throw error when zipCode is empty', async () => {
+    const customerRepository = MockRepository();
+    const usecase = new CreateCustomerUseCase(customerRepository);
+
+    await expect(usecase.execute({
+      ...input,
+      address: {
+        ...input.address,
+        zipCode: '',
+      }
+    })).rejects.toThrowError('ZipCode is required');
+  });
 });
