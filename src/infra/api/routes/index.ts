@@ -1,1 +1,2 @@
-export * from './customerRoute';
+export * from './customersRoute';
+export * from './productsRoute';

@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express';
-import { CreateCustomerUseCase, ListCustomerUseCase } from '../../../usecase';
+import { CreateCustomerUseCase, FindCustomerUseCase, ListCustomerUseCase } from '../../../usecase';
 import { CustomerRepository } from '../../customer';
 
-export const customerRoute = express.Router();
+export const customersRoute = express.Router();
 
-customerRoute.post('/', async (req: Request, res: Response) => {
+customersRoute.post('/', async (req: Request, res: Response) => {
   const usecase = new CreateCustomerUseCase(new CustomerRepository());
 
   try {
@@ -27,11 +27,23 @@ customerRoute.post('/', async (req: Request, res: Response) => {
   }
 });
 
-customerRoute.get('/', async (req: Request, res: Response) => {
+customersRoute.get('/', async (req: Request, res: Response) => {
   const usecase = new ListCustomerUseCase(new CustomerRepository());
 
   try {
     const output = await usecase.execute({});
+    res.status(200).json(output);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error });
+  }
+});
+
+customersRoute.get('/:id', async (req: Request, res: Response) => {
+  const usecase = new FindCustomerUseCase(new CustomerRepository());
+
+  try {
+    const output = await usecase.execute({ id: req.params.id });
     res.status(200).json(output);
   } catch (error) {
     console.error(error);

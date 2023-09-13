@@ -1,7 +1,7 @@
 import { app, sequelize } from "../express";
 import request from 'supertest';
 
-describe('E2E test for costumer', () => {
+describe('E2E test for costumers', () => {
   beforeEach(async () => {
     await sequelize.sync({ force: true });
   });
@@ -77,5 +77,43 @@ describe('E2E test for costumer', () => {
 
     expect(customer2.name).toBe('Jane Doe');
     expect(customer2.address.street).toBe('Secondary Street');
+  });
+
+  it('should find a customer by id', async () => {
+    const response1 = await request(app).post('/customers').send({
+      name: 'John Doe',
+      address: {
+        street: 'Main Street',
+        number: 10,
+        city: 'Sao Paulo',
+        state: 'SP',
+        zipCode: '00000-000',
+      }
+    });
+    expect(response1.status).toBe(200);
+
+    const response2 = await request(app).post('/customers').send({
+      name: 'Jane Doe',
+      address: {
+        street: 'Secondary Street',
+        number: 20,
+        city: 'Rio de Janeiro',
+        state: 'RJ',
+        zipCode: '11111-111',
+      }
+    });
+    expect(response2.status).toBe(200);
+
+    const response = await request(app).get(`/customers/${response1.body.id}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe('John Doe');
+    expect(response.body.address.street).toBe('Main Street');
+  });
+
+  it('should not find a customer by id', async () => {
+    const response = await request(app).get(`/customers/1`);
+
+    expect(response.status).toBe(500);
   });
 });
