@@ -10,34 +10,42 @@
 // -----------------------------------
 // Entidade Anêmica
 
+import { EntityAbstract } from "../../@shared";
+import { NotificationError } from "../../@shared/notification";
 import { Address } from "../valueObject";
 
-export class Customer {
-  private _id: string;
+export class Customer extends EntityAbstract {
   private _name: string;
   private _address!: Address;
   private _active: boolean = true;
   private _rewardPoints: number = 0;
 
   constructor(id: string, name: string) {
+    super();
     this._id = id;
     this._name = name;
     this.validate();
+
+    if (this.notification.hasErrors()) {
+      throw new NotificationError(this.notification.getErrors());
+    }
   }
 
   // Auto validar a entidade
   // Devemos ter consistencia na entidade
   validate() {
     if (this._name.length === 0) {
-      throw new Error("Name is required");
+      this.notification.addError({
+        context: "customer",
+        message: "Name is required",
+      });
     }
-    if (this._id.length === 0) {
-      throw new Error("Id is required");
+    if (this.id.length === 0) {
+      this.notification.addError({
+        context: "customer",
+        message: "Id is required",
+      });
     }
-  }
-
-  get id(): string {
-    return this._id;
   }
 
   get name(): string {
