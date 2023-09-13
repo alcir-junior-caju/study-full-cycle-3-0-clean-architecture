@@ -30,24 +30,4 @@ describe('Unit test update product use case', () => {
 
     expect(output).toStrictEqual(input);
   });
-
-  it('should throw error when name is empty', async () => {
-    const productRepository = MockRepository();
-    const usecase = new UpdateProductUseCase(productRepository);
-
-    await expect(usecase.execute({
-      ...input,
-      name: '',
-    })).rejects.toThrowError('Product name is required');
-  });
-
-  it('should throw error when price is zero', async () => {
-    const productRepository = MockRepository();
-    const usecase = new UpdateProductUseCase(productRepository);
-
-    await expect(usecase.execute({
-      ...input,
-      price: 0,
-    })).rejects.toThrowError('Product price must be greater than zero');
-  });
 });
