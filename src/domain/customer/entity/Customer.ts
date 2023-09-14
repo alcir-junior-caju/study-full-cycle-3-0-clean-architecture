@@ -12,6 +12,7 @@
 
 import { EntityAbstract } from "../../@shared";
 import { NotificationError } from "../../@shared/notification";
+import { CustomerValidatorFactory } from "../factory";
 import { Address } from "../valueObject";
 
 export class Customer extends EntityAbstract {
@@ -34,18 +35,7 @@ export class Customer extends EntityAbstract {
   // Auto validar a entidade
   // Devemos ter consistencia na entidade
   validate() {
-    if (this._name.length === 0) {
-      this.notification.addError({
-        context: "customer",
-        message: "Name is required",
-      });
-    }
-    if (this.id.length === 0) {
-      this.notification.addError({
-        context: "customer",
-        message: "Id is required",
-      });
-    }
+    CustomerValidatorFactory.create().validate(this);
   }
 
   get name(): string {

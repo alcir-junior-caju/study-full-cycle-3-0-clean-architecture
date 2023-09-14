@@ -2,7 +2,7 @@ import { Notification } from "../notification";
 
 export abstract class EntityAbstract {
   protected _id: string;
-  protected notification: Notification;
+  public notification: Notification;
 
   constructor() {
     this.notification = new Notification();
