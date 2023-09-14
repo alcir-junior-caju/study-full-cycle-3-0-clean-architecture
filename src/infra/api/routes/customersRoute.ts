@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { CreateCustomerUseCase, FindCustomerUseCase, ListCustomerUseCase } from '../../../usecase';
 import { CustomerRepository } from '../../customer';
+import { CustomerPresenter } from '../presenters';
 
 export const customersRoute = express.Router();
 
@@ -32,7 +33,10 @@ customersRoute.get('/', async (req: Request, res: Response) => {
 
   try {
     const output = await usecase.execute({});
-    res.status(200).json(output);
+    res.format({
+      json: () => res.status(200).json(output),
+      xml: () => res.status(200).send(CustomerPresenter.toXML(output)),
+    })
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error });

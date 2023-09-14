@@ -116,4 +116,54 @@ describe('E2E test for costumers', () => {
 
     expect(response.status).toBe(500);
   });
+
+  it('should get customer xml', async () => {
+    const response1 = await request(app).post('/customers').send({
+      name: 'John Doe',
+      address: {
+        street: 'Main Street',
+        number: 10,
+        city: 'Sao Paulo',
+        state: 'SP',
+        zipCode: '00000-000',
+      }
+    });
+    expect(response1.status).toBe(200);
+
+    const response2 = await request(app).post('/customers').send({
+      name: 'Jane Doe',
+      address: {
+        street: 'Secondary Street',
+        number: 20,
+        city: 'Rio de Janeiro',
+        state: 'RJ',
+        zipCode: '11111-111',
+      }
+    });
+    expect(response2.status).toBe(200);
+
+    const response = await request(app).get('/customers').set('Accept', 'application/xml');
+
+    expect(response.status).toBe(200);
+    expect(response.text).toContain('<?xml version="1.0" encoding="UTF-8"?>');
+
+    expect(response.text).toContain('<customers>');
+    expect(response.text).toContain('<customer>');
+    expect(response.text).toContain('<name>John Doe</name>');
+    expect(response.text).toContain('<street>Main Street</street>');
+    expect(response.text).toContain('<number>10</number>');
+    expect(response.text).toContain('<city>Sao Paulo</city>');
+    expect(response.text).toContain('<state>SP</state>');
+    expect(response.text).toContain('<zipCode>00000-000</zipCode>');
+    expect(response.text).toContain('</customer>');
+    expect(response.text).toContain('<customer>');
+    expect(response.text).toContain('<name>Jane Doe</name>');
+    expect(response.text).toContain('<street>Secondary Street</street>');
+    expect(response.text).toContain('<number>20</number>');
+    expect(response.text).toContain('<city>Rio de Janeiro</city>');
+    expect(response.text).toContain('<state>RJ</state>');
+    expect(response.text).toContain('<zipCode>11111-111</zipCode>');
+    expect(response.text).toContain('</customer>');
+    expect(response.text).toContain('</customers>');
+  });
 });
